@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,8 +17,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    ArrayList<User> users = new ArrayList<>();
+    ArrayList<User> userList = new ArrayList<>();
     UserAdapter userAdapter;
+    Button addUserButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +31,39 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         //  определяем шаблон макета списка на основе текущей активности
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        //  генерируем список пользователей добавлением объектов User с нужными параметрами
+        //  создаем кнопку, запускающую процесс добавления нового пользователя в БД
+        addUserButton = findViewById(R.id.addUserButton);
+        addUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //  создаем Intent с отсылкой на новую UserFormActivity
+                Intent intent = new Intent(MainActivity.this, UserFormActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void recycleViewInit() {
+        Users users = new Users(MainActivity.this);
+        userList = users.getUserList();
+        //  создаем Adapter и передаем ему список пользователей
+        userAdapter = new UserAdapter(userList);
+        //  переменной "recyclerView" устанавливаем Adapter и связываем его с Holder
+        recyclerView.setAdapter(userAdapter);
+        /*//  генерируем список пользователей добавлением объектов User с нужными параметрами
         for (int i = 1; i < 101; i++) {
             User user = new User();
             user.setUserName("User №" + i);
             user.setUserLastName("Lastname №" + i);
             users.add(user);
-        }
-        //  создаем Adapter и передаем ему список пользователей
-        userAdapter = new UserAdapter(users);
-        //  переменной "recyclerView" устанавливаем Adapter и связываем его с Holder
-        recyclerView.setAdapter(userAdapter);
+        }*/
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recycleViewInit();
     }
 
     //  создаем класс и наследуем соответствующую функциональность для генерации элементов списка
