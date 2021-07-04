@@ -24,10 +24,16 @@ public class Users {
         dataBase = new UserBaseHelper(context).getWritableDatabase();
     }
 
+    //  Осуществляет добавление пользователя в БД
     public void addUser(User user) {
         ContentValues values = getContentValues(user);
         dataBase.insert(UserDbSchema.UserTable.NAME, null, values);
     }
+
+//    //  Осуществляет удаление пользователя из БД
+//    public void deleteUser(long id) {
+//        dataBase.delete(UserDbSchema.UserTable.NAME, "_id = id", new String[]{String.valueOf(id)});
+//    }
 
     //  Осуществляет сопоставление данных(свойства объекта User относительно колонок БД)
     private static ContentValues getContentValues(User user) {
@@ -55,7 +61,7 @@ public class Users {
         this.userList = new ArrayList<User>();
         UserCursorWrapper cursorWrapper = queryUsers();
         try {
-            //  перемещаем курсор на первыую строку
+            //  перемещаем курсор на первую строку
             cursorWrapper.moveToFirst();
             //  проверяем не является ли запись финальной
             while (!cursorWrapper.isAfterLast()) {

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,14 +32,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         //  создаем кнопку, запускающую процесс добавления нового пользователя в БД
         addUserButton = findViewById(R.id.addUserButton);
-        addUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //  создаем Intent с отсылкой на новую UserFormActivity
-                Intent intent = new Intent(MainActivity.this, UserFormActivity.class);
-                startActivity(intent);
-            }
+        addUserButton.setOnClickListener(v -> {
+            //  создаем Intent с отсылкой на новую UserFormActivity
+            Intent intent = new Intent(MainActivity.this, UserFormActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -76,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
             super(inflater.inflate(R.layout.single_item, viewGroup, false));
             // itemView - текущий layout single_item
             itemTextView = itemView.findViewById(R.id.itemTextView);
+
+            //  создаем активность по просмотру персональных данный пользователя
+            itemTextView.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, PersonalUserFormActivity.class);
+                intent.putExtra("data", itemTextView.getText().toString());
+                startActivity(intent);
+            });
         }
 
         // метод привязывает "userString" к single_item
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //  создаем класс и наследуем соответствующую функциональность для передачи каждого элемента на RecyclerView
-    private class UserAdapter extends RecyclerView.Adapter<UserHolder> {
+    public class UserAdapter extends RecyclerView.Adapter<UserHolder> {
 
         ArrayList<User> users;
 
@@ -110,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
             //  выбираем пользователя с индексом position
             User user = users.get(position);
             //  конструируем строку выходных данных
-            String userString = user.getUserName() + "\n" + user.getUserLastName();
+            String userString = user.getUserName() + "\t" + user.getUserLastName()
+                                                   + "\n" + user.getPhone();
             //  отправляем строку холдеру для отображения в itemTextView
             userHolder.bind(userString);
         }
