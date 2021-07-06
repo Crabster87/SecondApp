@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -46,13 +47,6 @@ public class MainActivity extends AppCompatActivity {
         userAdapter = new UserAdapter(userList);
         //  переменной "recyclerView" устанавливаем Adapter и связываем его с Holder
         recyclerView.setAdapter(userAdapter);
-        /*//  генерируем список пользователей добавлением объектов User с нужными параметрами
-        for (int i = 1; i < 101; i++) {
-            User user = new User();
-            user.setUserName("User №" + i);
-            user.setUserLastName("Lastname №" + i);
-            users.add(user);
-        }*/
     }
 
     @Override
@@ -62,29 +56,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //  создаем класс и наследуем соответствующую функциональность для генерации элементов списка
-    private class UserHolder extends RecyclerView.ViewHolder {
+    private class UserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView itemTextView;
+        User user;
 
         public UserHolder(LayoutInflater inflater, ViewGroup viewGroup) {
             //  раздуваем активность отдельного элемента списка "single_item"
             super(inflater.inflate(R.layout.single_item, viewGroup, false));
             // itemView - текущий layout single_item
             itemTextView = itemView.findViewById(R.id.itemTextView);
-
             //  создаем активность по просмотру персональных данный пользователя
-            itemTextView.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, PersonalUserFormActivity.class);
-                intent.putExtra("data", itemTextView.getText().toString());
-                startActivity(intent);
-            });
+            itemView.setOnClickListener(this);
         }
 
         // метод привязывает "userString" к single_item
-        public void bind(String userString) {
+        //
+        public void bind(String userString, User user) {
             itemTextView.setText(userString);
+            this.user = user;
         }
 
+        //  создаем активность по просмотру персональных данный пользователя
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        }
     }
 
     //  создаем класс и наследуем соответствующую функциональность для передачи каждого элемента на RecyclerView
@@ -112,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
             //  выбираем пользователя с индексом position
             User user = users.get(position);
             //  конструируем строку выходных данных
-            String userString = user.getUserName() + "\t" + user.getUserLastName()
-                                                   + "\n" + user.getPhone();
+            String userString = user.getUserName() + "\n" + user.getUserLastName()
+                    + "\n" + user.getPhone();
             //  отправляем строку холдеру для отображения в itemTextView
-            userHolder.bind(userString);
+            userHolder.bind(userString, user);
         }
 
         @Override

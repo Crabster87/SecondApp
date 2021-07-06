@@ -12,27 +12,41 @@ public class UserFormActivity extends AppCompatActivity {
     EditText editTextName;
     EditText editTextLastName;
     EditText editTextPhone;
+    User user;
+    Boolean isUpdated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_form);
-
+        user = (User) getIntent().getSerializableExtra("user");
         editTextName = findViewById(R.id.editTextName);
         editTextLastName = findViewById(R.id.editTextLastName);
         editTextPhone = findViewById(R.id.editTextPhone);
-
         insertUserBtn = findViewById(R.id.insertUserButton);
+        //  Если такой пользователь присутсвует, то редактируем его данные
+        if (user != null) {
+            isUpdated = true;
+            editTextName.setText(user.getUserName());
+            editTextLastName.setText(user.getUserLastName());
+            editTextPhone.setText(user.getPhone());
+            //  Если такой пользователь отсутсвует, то добавляем нового
+        } else {
+            user = new User();
+        }
         insertUserBtn.setOnClickListener(view -> {
-            //  нажатием кнопки записываем в объект все данные
-            User user = new User();
+            //  Нажатием кнопки записываем в объект все данные
             user.setUserName(editTextName.getText().toString());
             user.setUserLastName(editTextLastName.getText().toString());
             user.setPhone(editTextPhone.getText().toString());
             Users users = new Users(UserFormActivity.this);
-            //  добавляем его в список
-            users.addUser(user);
-            //  метод закрывает текущую и возвращает предыдущую активность
+            //  Если данные пользователя подлежат редактирвоанию, то вызываем метод 'update()'
+            //  Иначе создаем нового пользователя
+            if (isUpdated) {
+                users.updateUser(user);
+            } else
+                users.addUser(user);
+            //  Метод закрывает текущую и возвращает предыдущую активность
             onBackPressed();
         });
     }

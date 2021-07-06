@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lemon"
     android:orientation="vertical"
     tools:context=".UserFormActivity">
 
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Добавить запись"
+        android:textColor="@color/black"
         android:textSize="28sp" />
 
     <EditText
@@ -22,7 +24,9 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Имя"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/editTextLastName"
@@ -31,7 +35,9 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Фамилия"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/editTextPhone"
@@ -40,12 +46,15 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Номер телефона"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black" />
 
     <Button
         android:id="@+id/insertUserButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:text="Добавить запись" />
 

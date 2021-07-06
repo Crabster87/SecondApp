@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import crabster.rudakov.secondapp.database.UserDbSchema;
 
-//  Осуществляет построчное чтение данных тз БД
+//  Осуществляет построчное чтение данных из БД
 public class UserCursorWrapper extends CursorWrapper {
 
     public UserCursorWrapper(Cursor cursor) {

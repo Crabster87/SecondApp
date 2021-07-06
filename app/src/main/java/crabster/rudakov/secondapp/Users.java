@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import crabster.rudakov.secondapp.database.UserBaseHelper;
 import crabster.rudakov.secondapp.database.UserDbSchema;
@@ -21,7 +22,7 @@ public class Users {
         //  Получаем контекст всего приложения для последующей возможности обращения к БД
         this.context = context.getApplicationContext();
         //  Создаем объект для взаимодействия с БД
-        dataBase = new UserBaseHelper(context).getWritableDatabase();
+        this.dataBase = new UserBaseHelper(context).getWritableDatabase();
     }
 
     //  Осуществляет добавление пользователя в БД
@@ -29,11 +30,6 @@ public class Users {
         ContentValues values = getContentValues(user);
         dataBase.insert(UserDbSchema.UserTable.NAME, null, values);
     }
-
-//    //  Осуществляет удаление пользователя из БД
-//    public void deleteUser(long id) {
-//        dataBase.delete(UserDbSchema.UserTable.NAME, "_id = id", new String[]{String.valueOf(id)});
-//    }
 
     //  Осуществляет сопоставление данных(свойства объекта User относительно колонок БД)
     private static ContentValues getContentValues(User user) {
@@ -73,6 +69,33 @@ public class Users {
             cursorWrapper.close();
         }
         return userList;
+    }
+
+    //  Осуществляет получение пользователя из БД
+    public User getUserFromDB(UUID uuid) {
+        Cursor cursor = dataBase.query(UserDbSchema.UserTable.NAME, null,
+                UserDbSchema.Cols.UUID + "=?",
+                new String[]{uuid.toString()}, null,
+                null,
+                null);
+        UserCursorWrapper cursorWrapper = new UserCursorWrapper(cursor);
+        cursorWrapper.moveToFirst();
+        return cursorWrapper.getUser();
+    }
+
+    //  Осуществляет удаление пользователя из БД
+    public void removeUser(UUID uuid) {
+        String stringUuid = uuid.toString();
+        dataBase.delete(UserDbSchema.UserTable.NAME,
+                UserDbSchema.Cols.UUID + "=?", new String[]{stringUuid});
+    }
+
+    //  Осуществляет обновление данных пользователя в БД
+    public void updateUser(User user) {
+        ContentValues values = getContentValues(user);
+        String stringUuid = user.getUuid().toString();
+        dataBase.update(UserDbSchema.UserTable.NAME, values,
+                UserDbSchema.Cols.UUID + "=?", new String[]{stringUuid});
     }
 
 }

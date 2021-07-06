@@ -1,8 +1,11 @@
 package crabster.rudakov.secondapp;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+//  Класс, характеризующий пользователя, реализует интерфейс 'Serializable' для возможности последующей
+//  передачи объекта из активности в активность
+public class User implements Serializable {
 
     private String userName;
     private String userLastName;
